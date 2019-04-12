@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.guitar.db.model.Manufacturer;
@@ -14,38 +15,36 @@ import com.guitar.db.model.Manufacturer;
 public class ManufacturerRepository {
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private ManufacturerJpaRepository manufacturerJpaRepository; 
 
 	/**
 	 * Create
 	 */
 	public Manufacturer create(Manufacturer man) {
-		entityManager.persist(man);
-		entityManager.flush();
-		return man;
+		return manufacturerJpaRepository.saveAndFlush(man);
 	}
 
 	/**
 	 * Update
 	 */
 	public Manufacturer update(Manufacturer man) {
-		man = entityManager.merge(man);
-		entityManager.flush();
-		return man;
+		return manufacturerJpaRepository.saveAndFlush(man);
 	}
 
 	/**
 	 * Delete
 	 */
 	public void delete(Manufacturer man) {
-		entityManager.remove(man);
-		entityManager.flush();
+		manufacturerJpaRepository.delete(man);
 	}
 
 	/**
 	 * Find
 	 */
 	public Manufacturer find(Long id) {
-		return entityManager.find(Manufacturer.class, id);
+		return manufacturerJpaRepository.findOne(id);
 	}
 
 	/**
@@ -73,10 +72,6 @@ public class ManufacturerRepository {
 	 * Native Query finder
 	 */
 	public List<Manufacturer> getManufacturersThatSellModelsOfType(String modelType) {
-		@SuppressWarnings("unchecked")
-		List<Manufacturer> mans = entityManager
-				.createNamedQuery("Manufacturer.getAllThatSellAcoustics")
-				.setParameter(1, modelType).getResultList();
-		return mans;
+		return manufacturerJpaRepository.queryAllThatSellAcoustics(modelType);
 	}
 }

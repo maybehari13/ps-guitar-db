@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @NamedNativeQuery(name = "Manufacturer.getAllThatSellAcoustics", 
-		query = "SELECT m.id, m.name, m.foundedDate, m.averageYearlySales, m.location_id as headquarters_id "
+		query = "SELECT m.id, m.name, m.foundedDate, m.averageYearlySales, m.location_id as headquarters_id, m.active "
 	    + "FROM Manufacturer m "
 		+ "LEFT JOIN Model mod ON (m.id = mod.manufacturer_id) "
 		+ "LEFT JOIN ModelType mt ON (mt.id = mod.modeltype_id) "
@@ -30,6 +30,7 @@ public class Manufacturer {
 	private String name;
 	private Date foundedDate;
 	private BigDecimal averageYearlySales;
+	private boolean active;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="MANUFACTURER_ID")
@@ -38,47 +39,61 @@ public class Manufacturer {
 	@ManyToOne
 	private Location headquarters;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public BigDecimal getAverageYearlySales() {
+		return averageYearlySales;
 	}
 
 	public Date getFoundedDate() {
 		return foundedDate;
 	}
 
-	public void setFoundedDate(Date foundedDate) {
-		this.foundedDate = foundedDate;
+	public Location getHeadquarters() {
+		return headquarters;
 	}
 
-	public BigDecimal getAverageYearlySales() {
-		return averageYearlySales;
-	}
-
-	public void setAverageYearlySales(BigDecimal averageYearlySales) {
-		this.averageYearlySales = averageYearlySales;
+	public Long getId() {
+		return id;
 	}
 
 	public List<Model> getModels() {
 		return models;
 	}
 
-	public void setModels(List<Model> models) {
-		this.models = models;
+	public String getName() {
+		return name;
 	}
 
-	public Location getHeadquarters() {
-		return headquarters;
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public void setAverageYearlySales(BigDecimal averageYearlySales) {
+		this.averageYearlySales = averageYearlySales;
+	}
+
+	public void setFoundedDate(Date foundedDate) {
+		this.foundedDate = foundedDate;
 	}
 
 	public void setHeadquarters(Location headquarters) {
 		this.headquarters = headquarters;
 	}
 
-	public Long getId() {
-		return id;
+	public void setModels(List<Model> models) {
+		this.models = models;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
